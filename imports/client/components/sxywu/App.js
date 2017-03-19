@@ -1,6 +1,3 @@
-/*
-  Example adapted from http://bl.ocks.org/sxywu/61a4bd0cfc373cf08884
-*/
 
 import React, { Component, PropTypes } from 'react';
 import Graph from './Graph';
