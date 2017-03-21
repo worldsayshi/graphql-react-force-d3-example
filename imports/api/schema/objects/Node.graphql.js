@@ -1,7 +1,7 @@
 const Node = `
   type Node {
     _id: ID
-    nodeWeight: Int
+    size: Int
   }
 `;
 

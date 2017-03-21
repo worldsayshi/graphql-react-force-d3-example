@@ -1,10 +1,7 @@
-
+import GraphApi from '../../Graph';
 
 export default {
   graph() {
-    return {
-      links: [],
-      nodes: [],
-    };
+    return GraphApi.genData();
   },
 };

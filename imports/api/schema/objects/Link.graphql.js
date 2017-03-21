@@ -2,7 +2,7 @@ const Link = `
   type Link {
     source: ID
     target: ID
-    linkWeight: Int
+    size: Int
   }
 `;
 
