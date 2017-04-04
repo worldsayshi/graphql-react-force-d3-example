@@ -1,7 +1,9 @@
 const Link = `
   type Link {
-    source: ID
-    target: ID
+    _id: ID
+    key: ID
+    source: Int
+    target: Int
     size: Int
   }
 `;

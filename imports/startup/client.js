@@ -6,7 +6,8 @@ import { createStore, combineReducers, applyMiddleware, compose } from 'redux';
 import { Meteor } from 'meteor/meteor';
 import { meteorClientConfig } from 'meteor/apollo';
 
-import App from '../client/components/sxywu/App';
+import graphReducer from '../client/reducers/Graph.reducer';
+import App from '../client/components/ConnectedApp';
 
 const render = (Component, div = document.getElementById('app')) => {
   Meteor.startup(() => {
@@ -23,6 +24,7 @@ const render = (Component, div = document.getElementById('app')) => {
 const client = new ApolloClient(meteorClientConfig());
 const store = createStore(
   combineReducers({
+    graph: graphReducer,
     apollo: client.reducer(),
   }),
   {}, // initial state

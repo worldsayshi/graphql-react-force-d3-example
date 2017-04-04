@@ -1,6 +1,6 @@
 import _ from 'underscore';
 
-function maintainNodePositions(oldNodes, nodes, width, height) {
+export function maintainNodePositions(oldNodes, nodes, width, height) {
   const kv = {};
   _.each(oldNodes, (d) => {
     kv[d._id] = d;
@@ -16,15 +16,17 @@ function maintainNodePositions(oldNodes, nodes, width, height) {
       d.y = (height / 2) + _.random(-25, 25);
     }
   });
+  return nodes;
 }
 
-export default function randomData(oldNodes, width, height) {
+export default function randomData(oldNodes) {
   // const oldNodes = nodes;
   // generate some data randomly
   let nodes = _.chain(_.range(_.random(10, 30)))
     .map(() => {
       const node = {};
       node._id = _.random(0, 30);
+      node.key = node._id;
       node.size = _.random(4, 10);
 
       return node;
@@ -44,13 +46,14 @@ export default function randomData(oldNodes, width, height) {
       link.source = _.random(0, nodes.length - 1);
       link.target = _.random(0, nodes.length - 1);
       link._id = `${link.source},${link.target}`;
+      link.key = link._id;
       link.size = _.random(1, 3);
 
       return link;
     }).uniq(link => link._id)
     .value();
 
-  maintainNodePositions(oldNodes, nodes, width, height);
+  // maintainNodePositions(oldNodes, nodes, width, height);
 
   return { nodes, links };
 }

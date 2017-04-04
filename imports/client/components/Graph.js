@@ -5,12 +5,8 @@ export default class Graph extends Component {
   static propTypes = {
     height: PropTypes.number.isRequired,
     width: PropTypes.number.isRequired,
-    nodes: PropTypes.array,
-    links: PropTypes.array,
-  };
-  static defaultProps = {
-    nodes: [],
-    links: [],
+    nodes: PropTypes.array.isRequired,
+    links: PropTypes.array.isRequired,
   };
 
   constructor(props) {
@@ -25,6 +21,12 @@ export default class Graph extends Component {
       .linkDistance(50)
       .size([width, height]);
   }
+
+  state = {
+    nodes: [],
+    links: [],
+  };
+
   componentWillMount() {
     this.force.on('tick', () => {
       // after force calculation starts, call
@@ -39,34 +41,60 @@ export default class Graph extends Component {
     // props passed in from parent, and d3's force function
     // mutates the nodes and links array directly
     // we're bypassing that here for sake of brevity in example
-    this.force.nodes(nextProps.nodes).links(nextProps.links);
+    console.log('next nodes', nextProps.nodes);
+    console.log('next links', nextProps.links);
+    /* nextProps.links.forEach((link) => {
+      console.log(link.target);
+      // XXX THis list is immutable!
+      link.target = 999;
+      console.log(link.target);
+    }); */
+    const mutableNodes = nextProps.nodes.map(
+      ({ _id, key, size }) => ({ _id, key, size }),
+    );
+    const mutableLinks = nextProps.links.map(
+      ({ source, target, _id, key, size }) =>
+      ({ source, target, _id, key, size }),
+    );
+    this.setState({
+      nodes: mutableNodes,
+      links: mutableLinks,
+    });
+    this.force.nodes(
+      mutableNodes,
+    ).links(
+      mutableLinks,
+    );
+
     this.force.start();
   }
   render() {
     const {
       width,
       height,
-      nodes = [],
-      links = [],
     } = this.props;
+    const {
+      nodes,
+      links,
+    } = this.state;
     // use React to draw all the nodes, d3 calculates the x and y
     const renderNodes = nodes.map((node) => {
       const transform = `translate(${node.x}, ${node.y})`;
       return (
         <g
           className="node"
-          key={node.key}
+          key={node._id}
           transform={transform}
         >
           <circle r={node.size} />
-          <text x={node.size + 5} dy=".35em">{node.key}</text>
+          <text x={node.size + 5} dy=".35em">{node._id}</text>
         </g>
       );
     });
     const renderLinks = links.map(link => (
       <line
         className="link"
-        key={link.key}
+        key={link._id}
         strokeWidth={link.size}
         x1={link.source.x}
         x2={link.target.x}
