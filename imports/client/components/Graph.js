@@ -1,12 +1,13 @@
 import React, { Component, PropTypes } from 'react';
 import * as d3 from 'd3';
+import Node from './Node';
 
 export default class Graph extends Component {
   static propTypes = {
     height: PropTypes.number.isRequired,
     width: PropTypes.number.isRequired,
-    nodes: PropTypes.array.isRequired,
-    links: PropTypes.array.isRequired,
+    nodes: PropTypes.array.isRequired, // eslint-disable-line
+    links: PropTypes.array.isRequired, // eslint-disable-line
   };
 
   constructor(props) {
@@ -36,19 +37,6 @@ export default class Graph extends Component {
   }
 
   componentWillReceiveProps(nextProps) {
-    // we should actually clone the nodes and links
-    // since we're not supposed to directly mutate
-    // props passed in from parent, and d3's force function
-    // mutates the nodes and links array directly
-    // we're bypassing that here for sake of brevity in example
-    console.log('next nodes', nextProps.nodes);
-    console.log('next links', nextProps.links);
-    /* nextProps.links.forEach((link) => {
-      console.log(link.target);
-      // XXX THis list is immutable!
-      link.target = 999;
-      console.log(link.target);
-    }); */
     const mutableNodes = nextProps.nodes.map(
       ({ _id, key, size }) => ({ _id, key, size }),
     );
@@ -68,6 +56,7 @@ export default class Graph extends Component {
 
     this.force.start();
   }
+
   render() {
     const {
       width,
@@ -77,38 +66,44 @@ export default class Graph extends Component {
       nodes,
       links,
     } = this.state;
-    // use React to draw all the nodes, d3 calculates the x and y
-    const renderNodes = nodes.map((node) => {
-      const transform = `translate(${node.x}, ${node.y})`;
-      return (
-        <g
-          className="node"
-          key={node._id}
-          transform={transform}
-        >
-          <circle r={node.size} />
-          <text x={node.size + 5} dy=".35em">{node._id}</text>
-        </g>
-      );
-    });
-    const renderLinks = links.map(link => (
-      <line
-        className="link"
-        key={link._id}
-        strokeWidth={link.size}
-        x1={link.source.x}
-        x2={link.target.x}
-        y1={link.source.y}
-        y2={link.target.y}
-      />));
 
     return (
-      <svg width={width} height={height}>
-        <g>
-          {renderLinks}
-          {renderNodes}
-        </g>
-      </svg>
+      <div>
+        <svg
+          width={width}
+          height={height}
+          style={{
+            userSelect: 'none',
+            borderRadius: '1px',
+            borderStyle: 'solid',
+          }}
+        >
+          <g>
+            {
+              links.map(link => (
+                <line
+                  className="link"
+                  key={link._id}
+                  strokeWidth={link.size}
+                  x1={link.source.x}
+                  x2={link.target.x}
+                  y1={link.source.y}
+                  y2={link.target.y}
+                />
+              ))
+            }
+            {
+              nodes.map(node => (
+                <Node
+                  key={node.key}
+                  data={node}
+                  force={this.force}
+                />
+              ))
+            }
+          </g>
+        </svg>
+      </div>
     );
   }
 }
