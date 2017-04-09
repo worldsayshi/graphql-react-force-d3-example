@@ -13,7 +13,7 @@ const render = (Component, div = document.getElementById('app')) => {
   Meteor.startup(() => {
     Meteor.autorun((c) => {
       if (!Meteor.loggingIn()) {
-        const div2 = div ? div : document.getElementById('app');
+        const div2 = div ? div : document.getElementById('app'); // eslint-disable-line
         ReactDOM.render(<Component />, div2);
         c.stop();
       }
