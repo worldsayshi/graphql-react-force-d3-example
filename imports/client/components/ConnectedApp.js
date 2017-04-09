@@ -12,21 +12,17 @@ const ConnectedApp = ({
     nodes,
     links,
   },
-}) => {
-  console.log('nodes', nodes);
-  console.log('links', links);
-  return (
-    <div>
-      <div className="update" onClick={() => this.updateData()}>update</div>
-      <Graph
-        nodes={nodes || []}
-        links={links || []}
-        width={width}
-        height={height}
-      />
-    </div>
-  );
-};
+}) => (
+  <div>
+    <div className="update" onClick={() => this.updateData()}>update</div>
+    <Graph
+      nodes={nodes || []}
+      links={links || []}
+      width={width}
+      height={height}
+    />
+  </div>
+);
 
 ConnectedApp.propTypes = {
   height: PropTypes.number,
